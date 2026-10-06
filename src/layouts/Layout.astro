@@ -1,0 +1,127 @@
+---
+// src/layouts/Layout.astro
+import '../styles/donatio.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Donatio | Conecta causas, cambia vidas",
+  description = "Donatio conecta la misión de tu organización con una plataforma para presentar campañas, recibir aportes y gestionar socios recurrentes con tu propia identidad.",
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://donatio.darkosync.com");
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://donatio.darkosync.com/#software",
+      "name": "Donatio",
+      "url": "https://donatio.darkosync.com",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web browser",
+      "description": description,
+      "creator": {
+        "@type": "Organization",
+        "@id": "https://darkosync.com/#organization",
+        "name": "DarkoSync",
+        "url": "https://darkosync.com"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "BOB",
+        "availability": "https://schema.org/OnlineOnly"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://donatio.darkosync.com/#organization",
+      "name": "Donatio",
+      "url": "https://donatio.darkosync.com",
+      "logo": "https://donatio.darkosync.com/brand/donatio-logo.png",
+      "parentOrganization": {
+        "@type": "Organization",
+        "@id": "https://darkosync.com/#organization",
+        "name": "DarkoSync",
+        "url": "https://darkosync.com"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://donatio.darkosync.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Donatio es una página para donar o una plataforma de gestión?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ambas cosas, conectadas. Tu organización puede presentar su misión y sus campañas en una página con identidad propia, recibir aportes y administrar campañas, transacciones, socios recurrentes y liquidaciones desde su panel."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿La experiencia puede llevar la marca de mi organización?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Donatio contempla páginas institucionales y de campañas con la identidad de cada organización: su logo, sus colores y su contenido."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se pueden recibir aportes recurrentes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. La plataforma contempla aportes únicos y recurrentes. La recurrencia automática depende del medio de pago habilitado: un pago por QR no genera cobros mensuales automáticos."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué monedas contempla la plataforma?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Donatio contempla bolivianos (BOB) y dólares estadounidenses (USD). Las modalidades de cobro disponibles dependen de la configuración de cada organización."
+          }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" type="image/png" href="/brand/donatio-logo.png" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="https://donatio.darkosync.com/brand/donatio-logo.png" />
+    <meta property="og:site_name" content="Donatio" />
+    <meta property="og:locale" content="es_BO" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://donatio.darkosync.com/brand/donatio-logo.png" />
+
+    <!-- Schema.org JSON-LD for AI Search & Google Knowledge Graph -->
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
